@@ -23,7 +23,7 @@ MPdelay = 0.5 ; % chip, Tc
 tau = MPdelay * oversampleRate ; % samples
 noise = attn*randn(1,len*2);
 
-%
+
 corr = ifft(fft(sig) .* conj(fft(sig))) ; 
 tmp = circshift(corr, [1, len]) ;
 tmp1 = alpha.*(circshift(tmp, [1, tau])) ;
