@@ -18,20 +18,19 @@ len = length(sig)/2 ;
 %% AWGN
 
 alpha = 0.5 ; %the power ratio of LOS and a MP signals
-MPdelay = 0.5 ; % chip, Tc
+MPdelay = 0.5 ; % chip, 0~1.5 Tc
+tau = round(MPdelay * oversampleRate) ; % samples
 
-tau = MPdelay * oversampleRate ; % samples
 noise = attn*randn(1,len*2);
-
 
 corr = ifft(fft(sig) .* conj(fft(sig))) ; 
 tmp = circshift(corr, [1, len]) ;
-tmp1 = alpha.*(circshift(tmp, [1, tau])) ;
-rxSig = tmp + alpha.*(circshift(tmp, [1, tau])) + noise ;
+tmp_shift = alpha.*(circshift(tmp, [1, tau])) ;
+rxSig = tmp + tmp_shift + noise ;
 
 chipRange = 2*oversampleRate ; %2Tc
 
 figure ;
 subplot(3,1,1) ; plot(tmp(len-chipRange:len+chipRange)) ;
-subplot(3,1,2) ; plot(tmp1(len-chipRange:len+chipRange)) ;
+subplot(3,1,2) ; plot(tmp_shift(len-chipRange:len+chipRange)) ;
 subplot(3,1,3) ; plot(rxSig(len-chipRange:len+chipRange)) ;
